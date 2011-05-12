@@ -1,3 +1,5 @@
+This is a clone of [http://benalman.com/projects/jquery-outside-events-plugin/](http://benalman.com/projects/jquery-outside-events-plugin/)
+
 # jQuery outside events #
 [http://benalman.com/projects/jquery-outside-events-plugin/](http://benalman.com/projects/jquery-outside-events-plugin/)
 
