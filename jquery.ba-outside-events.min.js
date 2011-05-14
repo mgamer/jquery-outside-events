@@ -4,7 +4,7 @@
  * Remake of a slick project by Ben Alman:
  * http://benalman.com/projects/jquery-outside-events-plugin/
  *
- * This project in inferior in every way to the work of Ben Alman
+ * This project is inferior in every way to the work of Ben Alman
  * but it allows for attaching live events.
  *
  */
