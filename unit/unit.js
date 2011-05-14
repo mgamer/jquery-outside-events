@@ -1,3 +1,11 @@
+/*!
+ * Test cases are borrowed from jQuery Outside Events project by Ben Alman
+ *
+ * http://benalman.com/projects/jquery-outside-events-plugin/
+ *
+ */
+
+
 // Not sure why this isn't set by default in qunit.js..
 QUnit.jsDump.HTML = false;
 
@@ -61,7 +69,7 @@ $(function() { // START CLOSURE
                 targets.push(e.target);
             };
 
-            bound.outside(event_name, 'live', handler);
+            bound.outside(event_name, 'bind', handler);
 
             //  equals( $.data( document, 'events' )[ event_name ][0].namespace, event_name +'-special-event', event_name + '-specific ' + event_name + ' event should be bound to document' );
 
@@ -107,7 +115,7 @@ $(function() { // START CLOSURE
             same(targets, [body,body,body,body,body,body], 'target should be the ' + event_name + ' event target element');
             same(elems, [a,a1,b,b1,b2,c], 'event should have been triggered on these elements');
 
-            $(a).add(a1).outside(event_name, 'die');
+            $(a).add(a1).outside(event_name, 'unbind');
 
             elems = [];
             targets = [];
@@ -116,21 +124,40 @@ $(function() { // START CLOSURE
             same(elems, [b,b1,b2,c], 'event should have been triggered on these elements');
 
 
-            $(".active :even").outside(event_name, 'live', handler);
+            $(".active:even").outside(event_name, 'live', handler);
 
-            $(a).append('<div id="active1" class=".active"></div><div id="active2" class=".active"></div><div id="active3" class=".active"></div><div id="active4" class=".active"></div>');
+            $(a).append('<div id="active0" class="active"></div><div id="active1" class="active"></div><div id="active2" class="active"></div><div id="active3" class="active"></div>');
 
-            var active1 = $("#active1")[0],
-                    active2 = $("#active1")[0],
-                    active3 = $("#active3")[0],
-                    active4 = $("#active4")[0];
+            var active0 = $("#active0")[0],
+                    active1 = $("#active1")[0],
+                    active2 = $("#active2")[0],
+                    active3 = $("#active3")[0];
+
+
 
             elems = [];
             targets = [];
             $(body).trigger(event_name);
             same(targets, [body,body,body,body,body,body], 'target should be the ' + event_name + ' event target element');
-            same(elems, [active2,active4,b,b1,b2,c], 'event should have been triggered on these elements');
+            same(elems, [b,b1,b2,c,active0,active2], 'event should have been triggered on these elements');
 
+
+            $("#active2").outside(event_name, 'die');
+            $("#active3").outside(event_name, 'live', handler);
+            elems = [];
+            targets = [];
+            $(body).trigger(event_name);
+            same(targets, [body,body,body,body,body,body], 'target should be the ' + event_name + ' event target element');
+            same(elems, [b,b1,b2,c,active0,active3], 'event should have been triggered on these elements');
+
+
+
+            $(".active").outside(event_name, 'die');
+            elems = [];
+            targets = [];
+            $(body).trigger(event_name);
+            same(targets, [body,body,body,body], 'target should be the ' + event_name + ' event target element');
+            same(elems, [b,b1,b2,c], 'event should have been triggered on these elements');
 
             bound.outside(event_name, 'die');
 

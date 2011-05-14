@@ -1,3 +1,14 @@
+/*!
+ * jQuery live outside events  - v0.1 - 14/05/2011
+ *
+ * Remake of a slick project by Ben Alman:
+ * http://benalman.com/projects/jquery-outside-events-plugin/
+ *
+ * This project in inferior in every way to the work of Ben Alman
+ * but it allows for attaching live events.
+ *
+ */
+
 (function(jQuery, document) {
 
     var bindings = {};
@@ -5,7 +16,7 @@
 
     jQuery.fn.outside = function(event_name, attach_method, handler) {
 
-        if (attach_method == 'live') {
+        if (attach_method == 'live' || attach_method == 'bind') {
 
             if (live_handler[event_name] == null) {
                 live_handler[event_name] = liveOutsideHandlerFactory();
@@ -14,18 +25,18 @@
 
             bindings[event_name] = bindings[event_name] || [];
             bindings[event_name].push({
-                targetSelector: this.selector,
-                targetElements: this,
+                targetSelector: attach_method == 'live' ? this.selector : null,
+                targetElements: attach_method == 'bind' ? this : null,
                 without: [],
                 handler: handler
             });
 
         }
 
-        if (attach_method == 'die') {
+        if (attach_method == 'die' || attach_method == 'unbind') {
             var _that = this;
             $.each(bindings[event_name], function(idx, elem) {
-                elem.without.push(_that.selector || _that);
+                elem.without.push(attach_method == 'die' ? _that.selector : _that);
             });
         }
 
@@ -36,7 +47,7 @@
                 if (bindings[event_name]) {
                     $.each(bindings[event_name], function(idx, binding) {
                         var handler = binding.handler;
-                        var target_elements = $(binding.targetElements || $(binding.targetSelector));
+                        var target_elements = $(binding.targetSelector || binding.targetElements);
 
                         $.each(binding.without, function(idx, elem) {
                             target_elements = target_elements.not($(elem));
@@ -49,12 +60,12 @@
                                 handler.apply(elem, [event]);
                             }
                         });
+
                     });
 
                 }
             }
         }
-
 
     };
 })(jQuery, document);
