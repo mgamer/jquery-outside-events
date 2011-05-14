@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title> - jsFiddle demo</title>
+  <script type='text/javascript' src='http://code.jquery.com/jquery-1.6.js'></script>
+  
+  <link rel="stylesheet" type="text/css" href="/css/normalize.css">
+  <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+  
+    
+    
+      <script type='text/javascript' src="http://benalman.com/code/projects/jquery-outside-events/jquery.ba-outside-events.js"></script>
+
+    
+  
+  <style type='text/css'>
+    
+
+  </style>
+  
+  <script type='text/javascript'>
+  //<![CDATA[ 
+  $(window).load(function(){
+  $("#a1").bind("click", function() { console.log("#a1 clicked");});
+var a1 = $("#a1")[0];
+console.dir(a1);
+
+//$(".m1").live("pizzaCooked", function(a) {
+//    console.log("live event handled");
+//});
+
+
+
+
+  });
+  //]]> 
+  </script>
+  
+</head>
+<body>
+  <html>
+    <body>
+        <div>
+            <div id="a" style="width:600px; height:600px; background-color:blue">
+
+                <div id="a1" style="width:300px; height:300px; background-color:red"></div>
+            </div>
+            <div id="b">
+                <div id="b1">
+                    <div id="b2"></div>
+                    
+                </div>
+            </div>
+            <div id="c"></div>
+        </div>
+
+        
+    </body>
+</html>
+
+  
+</body>
+
+
+</html>
+
