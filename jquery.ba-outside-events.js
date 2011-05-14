@@ -237,52 +237,66 @@
 
 
 })(jQuery, document, "outside");
+   var bindings = {};
+(function(jQuery, document) {
 
+    var live_handler = null;
+  //  var bindings = {};
 
-var live_handler = null;
-var bindings = {};
+    jQuery.fn.outside = function(event_name, attach_method, handler) {
 
+        if (attach_method == 'live') {
 
-jQuery.fn.outside = function(event_name, attach_method, handler) {
+            if (live_handler == null) {
+                live_handler = liveOutsideHandlerFactory();
+                $(document).bind(event_name, live_handler);
+            }
 
-    if (attach_method == 'live') {
+            bindings[event_name] = bindings[event_name] || [];
+            bindings[event_name].push({
+                targetSelector: this.selector,
+                targetElements: this,
+                without: [],
+                handler: handler
+            });
 
-        if (live_handler == null) {
-            live_handler = liveOutsideHandlerFactory();
-            $(document).bind(event_name, live_handler);
         }
 
-        bindings[event_name] = bindings[event_name] || [];
-        bindings[event_name].push({
-            targetSelector: this.selector,
-            handler: handler
-        });
+        if (attach_method == 'die') {
+            //$(document).unbind(event_name, live_handler);
+            //bindings[event_name] = null;
+             var _that = this;
+            $.each(bindings[event_name], function(idx, elem) {
+                elem.without.push(_that.selector || _that);
+            });
 
-    }
+        }
 
-    if (attach_method == 'die') {
-        $(document).unbind(event_name, live_handler);
-        live_handler = null;
-        bindings[event_name] = null;
-    }
+        function liveOutsideHandlerFactory() {
+            return function(event) {
+                var event_name = event.type;
+                if (bindings[event_name]) {
+                    $.each(bindings[event_name], function(idx, binding) {
+                        var handler = binding.handler;
+                        var target_elements = $(binding.targetElements || $(binding.targetSelector));
 
-    function liveOutsideHandlerFactory() {
-        return function(event) {
-            var event_name = event.type;
-            if (bindings[event_name]) {
-                $.each(bindings[event_name], function(idx, binding) {
-                    var handler = binding.handler;
-                    var target_selector = binding.targetSelector;
-                    $(target_selector).each(function(idx, elem) {
-                        if (elem != event.target && $(elem).has(event.target)) {
-                            handler.apply(elem, [event]);
-                        }
+                        $.each(binding.without, function(idx, elem) {
+                           target_elements = target_elements.not($(elem));
+                        });
+
+                        target_elements.each(function(idx, elem) {
+
+                            if (elem != event.target && !$(elem).has(event.target).length) {
+
+                                handler.apply(elem, [event]);
+                            }
+                        });
                     });
-                });
 
+                }
             }
         }
-    }
 
 
-};
+    };
+})(jQuery, document);
