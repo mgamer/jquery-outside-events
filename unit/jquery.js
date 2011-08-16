@@ -15,6 +15,10 @@
  */
 (function( window, undefined ) {
 
+/*
+this is no more than a simple test
+*/
+
 // Use the correct document accordingly with window argument (sandbox)
 var document = window.document,
 	navigator = window.navigator,
